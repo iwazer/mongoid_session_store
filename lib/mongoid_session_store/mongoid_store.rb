@@ -2,10 +2,18 @@ module ActionDispatch
   module Session
     class MongoidStore < AbstractStore
 
+      def self.collection_name= name
+        @collection_name = name
+      end
+
+      def self.collection_name
+        @collection_name ||= 'sessions'
+      end
+
       class Session
         include Mongoid::Document
         
-        store_in collection: 'sessions'
+        store_in collection: MongoidStore.collection_name
 
         field :id, type: String
         attr_accessible :id
@@ -82,3 +90,5 @@ module ActionDispatch
     end
   end
 end
+
+MongoidStore = ActionDispatch::Session::MongoidStore
