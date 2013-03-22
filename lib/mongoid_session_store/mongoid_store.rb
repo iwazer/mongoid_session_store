@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 module ActionDispatch
   module Session
     class MongoidStore < AbstractStore
@@ -12,6 +13,7 @@ module ActionDispatch
 
       class Session
         include Mongoid::Document
+        include Mongoid::Timestamps
         
         store_in collection: ->{MongoidStore.collection_name}
 
@@ -48,7 +50,11 @@ module ActionDispatch
         end
 
         def find_session(id)
-          @@session_class.find_or_create_by(:id => id)
+          # ReplicaSetを利用していてconsistency設定がeventualの場合、
+          # masterからsecondaryにデータが行き渡る前に検索されると、
+          # まだ存在しないと判断して生成しようとしエラーになるため、
+          # 強制的に読み込みをstrongに変更する。
+          @@session_class.with(consistency: :strong).find_or_create_by(id: id)
         end
 
         # def destroy(env)
