@@ -13,7 +13,7 @@ module ActionDispatch
       class Session
         include Mongoid::Document
         
-        store_in collection: MongoidStore.collection_name
+        store_in collection: ->{MongoidStore.collection_name}
 
         field :id, type: String
         attr_accessible :id
