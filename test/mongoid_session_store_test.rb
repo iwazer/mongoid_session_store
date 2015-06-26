@@ -4,13 +4,13 @@ class MongoidSessionStoreTest < ActionDispatch::IntegrationTest
   setup do
     ActionDispatch::Session::MongoidStore::Session.destroy_all
   end
-        
+
   test "getting nil session value" do
     get '/get_session_value'
     assert_response :success
     assert_equal 'foo: nil', response.body
   end
-  
+
   test "calling reset session twice does not raise errors" do
     get '/call_reset_session', :twice => "true"
     assert_response :success
@@ -19,7 +19,7 @@ class MongoidSessionStoreTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal 'foo: "baz"', response.body
   end
-  
+
   test "setting session value after session reset" do
     get '/set_session_value'
     assert_response :success
@@ -38,7 +38,7 @@ class MongoidSessionStoreTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_not_equal session_id, response.body
   end
-  
+
   test "getting session value after session reset" do
     get '/set_session_value'
     assert_response :success
@@ -55,7 +55,7 @@ class MongoidSessionStoreTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal 'foo: nil', response.body, "data for this session should have been obliterated from the database"
   end
-  
+
   test "getting_from_nonexistent_session" do
     get '/get_session_value'
     assert_response :success
@@ -102,5 +102,5 @@ class MongoidSessionStoreTest < ActionDispatch::IntegrationTest
     assert_equal 'foo: nil', response.body
     assert_not_equal session_id, cookies['_session_id']
   end
-   
+
 end
